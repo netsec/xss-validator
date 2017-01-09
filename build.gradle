@@ -1,0 +1,27 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile files("$burpJar")
+    compile 'commons-codec:commons-codec:1.10'
+    compile 'org.apache.httpcomponents:httpcore:4.3.3'
+    compile 'org.apache.httpcomponents:httpcomponents-client:4.3.2'
+    compile 'org.apache.httpcomponents:httpclient-cache:4.3.2'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'burp-extender/src'
+        }
+    }
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
